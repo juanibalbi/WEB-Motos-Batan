@@ -1,5 +1,6 @@
 import React from 'react';
-import { MapPin, Phone, Instagram, Facebook, Clock } from 'lucide-react';
+import { MapPin, Phone, Instagram, Facebook, Clock, MessageCircle } from 'lucide-react';
+import { WHATSAPP_SALES_URL, WHATSAPP_WORKSHOP_URL, FACEBOOK_URL, INSTAGRAM_URL } from '../constants';
 
 interface FooterProps {
   toggleAdmin: () => void;
@@ -16,12 +17,31 @@ const Footer: React.FC<FooterProps> = ({ toggleAdmin, isAdmin }) => {
           <div className="text-center md:text-left">
             <h2 className="text-5xl brand-font font-bold mb-4">MB <span className="text-brand-red italic">MOTOS</span></h2>
             <p className="text-gray-400 mb-6 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
-              Concesionario Multimarcas. Repuestos, Accesorios y Service Oficial.
-              La mejor atención y el respaldo que necesitás.
+              Concesionario y Taller Multimarca.
+              <br/>
+              Especialistas en service oficial, post-venta, repuestos originales y accesorios.
+              <br/>
+              <span className="text-white font-medium mt-2 block">Garantía y Confianza.</span>
             </p>
             <div className="flex justify-center md:justify-start space-x-6">
-              <a href="#" className="text-gray-400 hover:text-white hover:bg-brand-red/20 p-2 rounded-full transition"><Facebook size={24} /></a>
-              <a href="#" className="text-gray-400 hover:text-white hover:bg-brand-red/20 p-2 rounded-full transition"><Instagram size={24} /></a>
+              <a 
+                href={FACEBOOK_URL} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-gray-400 hover:text-white hover:bg-brand-red/20 p-2 rounded-full transition"
+                aria-label="Facebook"
+              >
+                <Facebook size={24} />
+              </a>
+              <a 
+                href={INSTAGRAM_URL} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-gray-400 hover:text-white hover:bg-brand-red/20 p-2 rounded-full transition"
+                aria-label="Instagram"
+              >
+                <Instagram size={24} />
+              </a>
             </div>
           </div>
 
@@ -35,7 +55,14 @@ const Footer: React.FC<FooterProps> = ({ toggleAdmin, isAdmin }) => {
               </li>
               <li className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2">
                 <Phone size={20} className="text-brand-red shrink-0" />
-                <span className="font-mono text-lg">+549-223-5433958</span>
+                <div className="flex flex-col items-center md:items-start gap-1">
+                  <a href={WHATSAPP_SALES_URL} target="_blank" rel="noopener noreferrer" className="hover:text-green-500 transition flex items-center gap-1">
+                    <span className="font-bold">Ventas:</span> +549-223-5433958
+                  </a>
+                  <a href={WHATSAPP_WORKSHOP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-green-500 transition flex items-center gap-1">
+                    <span className="font-bold">Taller:</span> +549-223-5401224
+                  </a>
+                </div>
               </li>
               <li className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2">
                 <Clock size={20} className="text-brand-red shrink-0" />

@@ -2,9 +2,15 @@ import { Bike } from './types';
 
 // Contact Configuration
 export const GOOGLE_FORM_URL = 'https://forms.gle/7q3jTaAceoVPZbYA8';
+export const INSTAGRAM_URL = 'https://www.instagram.com/mb.motosbatan';
+export const FACEBOOK_URL = 'https://www.facebook.com/moto.batan?sfnsn=scwspwa';
 
-// Keep phone number for display purposes in Footer
-export const PHONE_DISPLAY = '2284-603756'; 
+// Phone Numbers
+export const PHONE_SALES = '5492235433958';
+export const PHONE_WORKSHOP = '5492235401224';
+
+export const WHATSAPP_SALES_URL = `https://wa.me/${PHONE_SALES}`;
+export const WHATSAPP_WORKSHOP_URL = `https://wa.me/${PHONE_WORKSHOP}`;
 
 // Helper to provide fallbacks if external images break
 const PLACEHOLDER_IMG = 'https://placehold.co/600x400/png?text=Moto+Sin+Imagen';

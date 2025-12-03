@@ -92,11 +92,11 @@ const App: React.FC = () => {
         <Hero />
 
         <div id="catalogo" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16 w-full">
-          <div className="text-center mb-6 md:mb-12">
+          <div className="text-center mb-6 md:mb-10">
             <h2 className="text-4xl md:text-5xl font-bold brand-font text-white mb-2">
               NUESTRO <span className="text-brand-red">CATÁLOGO</span>
             </h2>
-            <div className="w-20 h-1.5 bg-brand-red mx-auto rounded-full"></div>
+            <div className="w-20 h-1.5 bg-brand-red mx-auto rounded-full mb-6"></div>
           </div>
 
           {/* Admin Controls */}
@@ -117,7 +117,6 @@ const App: React.FC = () => {
           )}
 
           {/* Filters & Search - Mobile Optimized Stack */}
-          {/* Removed sticky negative margins to prevent horizontal wobble. Used standard container logic. */}
           <div className="mb-8 flex flex-col gap-4 bg-black/95 p-4 rounded-xl border border-gray-800 shadow-xl">
             
             {/* Search Input */}
@@ -134,7 +133,7 @@ const App: React.FC = () => {
               />
             </div>
 
-            {/* Brand Filter - Wrapped Grid (Vertical flow) instead of horizontal scroll */}
+            {/* Brand Filter - Wrapped Grid (Vertical flow) */}
             <div className="flex flex-wrap gap-2 justify-center w-full">
               <button
                 onClick={() => setFilterBrand('TODAS')}

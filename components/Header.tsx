@@ -1,6 +1,6 @@
 import React from 'react';
-import { Menu, X, ClipboardList } from 'lucide-react';
-import { GOOGLE_FORM_URL } from '../constants';
+import { Menu, X, ClipboardList, MessageCircle, Wrench } from 'lucide-react';
+import { GOOGLE_FORM_URL, WHATSAPP_SALES_URL, WHATSAPP_WORKSHOP_URL } from '../constants';
 
 interface HeaderProps {
   toggleAdmin: () => void;
@@ -27,28 +27,49 @@ const Header: React.FC<HeaderProps> = ({ toggleAdmin, isAdmin }) => {
               </div>
               <div className="flex flex-col justify-center">
                  <span className="brand-font text-2xl md:text-3xl text-white italic font-bold leading-none tracking-wider">MOTOS</span>
-                 <span className="text-[10px] md:text-xs text-brand-red uppercase tracking-[0.2em] leading-none font-bold">Concesionario</span>
+                 <span className="text-[10px] md:text-xs text-brand-red uppercase tracking-[0.2em] leading-none font-bold">Concesionario & Taller</span>
               </div>
             </div>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              <a href="#catalogo" className="text-gray-300 hover:text-brand-red px-3 py-2 rounded-md text-lg font-medium transition-colors brand-font tracking-wide">CATÁLOGO</a>
-              <a href="#nosotros" className="text-gray-300 hover:text-brand-red px-3 py-2 rounded-md text-lg font-medium transition-colors brand-font tracking-wide">NOSOTROS</a>
-              <a 
-                href={GOOGLE_FORM_URL} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-brand-red hover:bg-green-600 text-white px-6 py-2 rounded transform skew-x-[-10deg] hover:skew-x-[-5deg] transition-all duration-300 group shadow-lg shadow-brand-red/20"
-              >
-                <div className="flex items-center gap-2 skew-x-[10deg] group-hover:skew-x-[5deg]">
-                  <ClipboardList size={18} />
-                  <span className="font-bold font-sans">FORMULARIO</span>
-                </div>
-              </a>
+          <div className="hidden md:flex items-center space-x-4">
+            <a href="#catalogo" className="text-gray-300 hover:text-brand-red px-2 py-2 rounded-md text-base font-medium transition-colors brand-font tracking-wide">CATÁLOGO</a>
+            <a href="#nosotros" className="text-gray-300 hover:text-brand-red px-2 py-2 rounded-md text-base font-medium transition-colors brand-font tracking-wide">NOSOTROS</a>
+            
+            {/* WhatsApp Buttons Desktop */}
+            <div className="flex items-center gap-2 ml-4 pl-4 border-l border-gray-800">
+                <a 
+                  href={WHATSAPP_SALES_URL}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-xs font-bold bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded transition-colors"
+                  title="Contactar Ventas"
+                >
+                    <MessageCircle size={14} /> VENTAS
+                </a>
+                <a 
+                  href={WHATSAPP_WORKSHOP_URL}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-xs font-bold bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded transition-colors border border-gray-700"
+                  title="Contactar Taller"
+                >
+                    <Wrench size={14} /> TALLER
+                </a>
             </div>
+
+            <a 
+              href={GOOGLE_FORM_URL} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-brand-red hover:bg-red-700 text-white px-5 py-2 rounded transform skew-x-[-10deg] hover:skew-x-[-5deg] transition-all duration-300 group shadow-lg shadow-brand-red/20 ml-2"
+            >
+              <div className="flex items-center gap-2 skew-x-[10deg] group-hover:skew-x-[5deg]">
+                <ClipboardList size={18} />
+                <span className="font-bold font-sans text-sm">FORMULARIO</span>
+              </div>
+            </a>
           </div>
 
           {/* Mobile menu button */}
@@ -83,7 +104,27 @@ const Header: React.FC<HeaderProps> = ({ toggleAdmin, isAdmin }) => {
               NOSOTROS
             </a>
             
-            <div className="pt-6">
+            {/* Mobile Contact Buttons */}
+            <div className="grid grid-cols-2 gap-3 mt-4">
+                <a 
+                  href={WHATSAPP_SALES_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-green-600 text-white p-3 rounded-lg font-bold text-sm"
+                >
+                    <MessageCircle size={18} /> VENTAS
+                </a>
+                <a 
+                  href={WHATSAPP_WORKSHOP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-gray-800 border border-gray-700 text-white p-3 rounded-lg font-bold text-sm"
+                >
+                    <Wrench size={18} /> TALLER
+                </a>
+            </div>
+
+            <div className="pt-2">
               <a 
                 href={GOOGLE_FORM_URL}
                 target="_blank"
