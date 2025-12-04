@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Bike } from '../types';
-import { BRANDS } from '../constants';
-import { PlusCircle, Upload, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
+import { BRANDS, UPLOAD_API_URL } from '../constants';
+import { PlusCircle, Upload, Link as LinkIcon, Image as ImageIcon, Loader2 } from 'lucide-react';
 
 interface AdminPanelProps {
   onAddBike: (bike: Bike) => void;
@@ -10,26 +10,57 @@ interface AdminPanelProps {
 const AdminPanel: React.FC<AdminPanelProps> = ({ onAddBike }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [imageMode, setImageMode] = useState<'url' | 'file'>('url');
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  
   const [newBike, setNewBike] = useState<Partial<Bike>>({
     brand: BRANDS[0],
     model: '',
     imageUrl: ''
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      // Check file size (limit to ~2MB to prevent localStorage quotas issues)
-      if (file.size > 2 * 1024 * 1024) {
-        alert("La imagen es muy pesada. Por favor usa una imagen menor a 2MB.");
-        return;
-      }
+    if (!file) return;
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewBike({ ...newBike, imageUrl: reader.result as string });
-      };
-      reader.readAsDataURL(file);
+    // 1. Validaciones Cliente
+    if (file.size > 5 * 1024 * 1024) {
+      alert("El archivo es demasiado grande (Máximo 5MB).");
+      return;
+    }
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+    if (!validTypes.includes(file.type)) {
+      alert("Formato no válido. Usa JPG, PNG o WEBP.");
+      return;
+    }
+
+    // 2. Subida al Servidor
+    setIsUploading(true);
+    setUploadError('');
+
+    const formData = new FormData();
+    formData.append('foto', file);
+
+    try {
+      const response = await fetch(UPLOAD_API_URL, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.ok) {
+        // Asignar URL retornada por el servidor
+        setNewBike(prev => ({ ...prev, imageUrl: data.url }));
+      } else {
+        throw new Error(data.error || 'Error al subir la imagen');
+      }
+    } catch (error: any) {
+      console.error("Error upload:", error);
+      setUploadError(error.message || 'Error de conexión con el servidor');
+      alert(`Error: ${error.message || 'No se pudo subir la imagen'}`);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -45,6 +76,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onAddBike }) => {
       // Reset form
       setNewBike({ brand: BRANDS[0], model: '', imageUrl: '' });
       setIsOpen(false);
+      setImageMode('url');
     }
   };
 
@@ -103,14 +135,14 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onAddBike }) => {
                   onClick={() => setImageMode('url')}
                   className={`flex-1 flex items-center justify-center gap-2 py-1.5 text-sm rounded-md transition ${imageMode === 'url' ? 'bg-gray-700 text-white shadow' : 'text-gray-500 hover:text-gray-300'}`}
                 >
-                  <LinkIcon size={14} /> URL
+                  <LinkIcon size={14} /> URL Externa
                 </button>
                 <button
                   type="button"
                   onClick={() => setImageMode('file')}
                   className={`flex-1 flex items-center justify-center gap-2 py-1.5 text-sm rounded-md transition ${imageMode === 'file' ? 'bg-gray-700 text-white shadow' : 'text-gray-500 hover:text-gray-300'}`}
                 >
-                  <Upload size={14} /> Subir
+                  <Upload size={14} /> Subir Archivo
                 </button>
               </div>
 
@@ -126,23 +158,36 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onAddBike }) => {
                   <p className="text-xs text-gray-500 mt-2">Copia y pega el enlace directo de la imagen.</p>
                 </div>
               ) : (
-                <div className="animate-fade-in text-center border-2 border-dashed border-gray-600 rounded-lg p-4 hover:border-gray-400 transition cursor-pointer relative">
-                  <input 
-                    type="file" 
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  />
-                  <div className="flex flex-col items-center">
-                    <ImageIcon className="text-gray-400 mb-2" size={24} />
-                    <span className="text-sm text-gray-300 font-medium">Click para seleccionar foto</span>
-                    <span className="text-xs text-gray-500 mt-1">Máximo 2MB (JPG, PNG)</span>
-                  </div>
+                <div className={`animate-fade-in text-center border-2 border-dashed ${uploadError ? 'border-red-500' : 'border-gray-600'} rounded-lg p-4 hover:border-gray-400 transition cursor-pointer relative`}>
+                  
+                  {isUploading ? (
+                    <div className="flex flex-col items-center justify-center py-2">
+                      <Loader2 className="animate-spin text-brand-red mb-2" size={32} />
+                      <span className="text-sm text-gray-300">Subiendo imagen...</span>
+                    </div>
+                  ) : (
+                    <>
+                      <input 
+                        type="file" 
+                        accept="image/png, image/jpeg, image/jpg, image/webp"
+                        onChange={handleFileChange}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        disabled={isUploading}
+                      />
+                      <div className="flex flex-col items-center">
+                        <ImageIcon className="text-gray-400 mb-2" size={24} />
+                        <span className="text-sm text-gray-300 font-medium">Click para subir foto</span>
+                        <span className="text-xs text-gray-500 mt-1">Máximo 5MB (JPG, PNG)</span>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
+              
+              {uploadError && <p className="text-xs text-red-500 mt-2 text-center">{uploadError}</p>}
 
               {/* Preview */}
-              {newBike.imageUrl && (
+              {newBike.imageUrl && !isUploading && (
                 <div className="mt-4">
                   <p className="text-xs text-gray-400 mb-1">Vista Previa:</p>
                   <div className="h-24 w-full bg-white rounded flex items-center justify-center overflow-hidden border border-gray-600">
@@ -156,9 +201,10 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onAddBike }) => {
           <div className="mt-6 flex justify-end">
              <button 
               type="submit"
-              className="bg-brand-red hover:bg-red-700 text-white font-bold py-2 px-8 rounded shadow-lg shadow-red-900/20 transition-transform hover:scale-105 active:scale-95"
+              disabled={isUploading}
+              className={`bg-brand-red hover:bg-red-700 text-white font-bold py-2 px-8 rounded shadow-lg shadow-red-900/20 transition-transform hover:scale-105 active:scale-95 ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              Guardar Moto
+              {isUploading ? 'Esperando imagen...' : 'Guardar Moto'}
             </button>
           </div>
         </form>

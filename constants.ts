@@ -12,6 +12,12 @@ export const PHONE_WORKSHOP = '5492235401224';
 export const WHATSAPP_SALES_URL = `https://wa.me/${PHONE_SALES}`;
 export const WHATSAPP_WORKSHOP_URL = `https://wa.me/${PHONE_WORKSHOP}`;
 
+// Upload API
+// NOTA: Si estás en localhost, esta URL debe apuntar a tu servidor real o a un localhost PHP.
+// Al subir a DonWeb, como el archivo estará en el mismo dominio, funcionará bien.
+// Puedes cambiar esto a '/upload.php' para usar rutas relativas una vez subido a producción.
+export const UPLOAD_API_URL = 'https://motosbatan.com/upload.php'; 
+
 // Helper to provide fallbacks if external images break
 const PLACEHOLDER_IMG = 'https://placehold.co/600x400/png?text=Moto+Sin+Imagen';
 
